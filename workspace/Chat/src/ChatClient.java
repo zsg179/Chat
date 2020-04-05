@@ -12,6 +12,7 @@ public class ChatClient extends Frame {
         this.setSize(300,300);
         this.setVisible(true);
     }
+
     public static void main(String[] args) {
         new ChatClient().launchFrame();
     }
