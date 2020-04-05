@@ -16,3 +16,4 @@ public class ChatClient extends Frame {
         new ChatClient().launchFrame();
     }
 }
+
