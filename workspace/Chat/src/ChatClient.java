@@ -17,6 +17,7 @@ public class ChatClient extends Frame {
     TextField tfTxt = new TextField();
     TextArea taContent = new TextArea();
     Socket s = null;
+    DataOutputStream dos = null;
 
     public void launchFrame() {
         this.setLocation(400, 300);
@@ -27,6 +28,7 @@ public class ChatClient extends Frame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                disConnect();
                 System.exit(0);
             }
         });
@@ -46,19 +48,26 @@ public class ChatClient extends Frame {
             taContent.setText(str);
             tfTxt.setText("");
             try {
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
                 dos.writeUTF(str);
                 dos.flush();
-                dos.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
+    private void disConnect() {
+        try {
+            dos.close();
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void connect() {
         try {
-             s = new Socket("127.0.0.1",8888);
+            s = new Socket("127.0.0.1", 8888);
+            dos = new DataOutputStream(s.getOutputStream());
             System.out.println("连上了服务端");
         } catch (IOException e) {
             e.printStackTrace();
