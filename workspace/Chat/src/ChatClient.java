@@ -3,6 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 /**
  * @Auther :朱树广
@@ -13,6 +16,7 @@ import java.awt.event.WindowEvent;
 public class ChatClient extends Frame {
     TextField tfTxt = new TextField();
     TextArea taContent = new TextArea();
+    Socket s = null;
 
     public void launchFrame() {
         this.setLocation(400, 300);
@@ -28,6 +32,7 @@ public class ChatClient extends Frame {
         });
         tfTxt.addActionListener(new TFListener());
         this.setVisible(true);
+        connect();
     }
 
     public static void main(String[] args) {
@@ -37,9 +42,26 @@ public class ChatClient extends Frame {
     private class TFListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String s = tfTxt.getText().trim();
-            taContent.setText(s);
+            String str = tfTxt.getText().trim();
+            taContent.setText(str);
             tfTxt.setText("");
+            try {
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                dos.writeUTF(str);
+                dos.flush();
+                dos.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void connect() {
+        try {
+             s = new Socket("127.0.0.1",8888);
+            System.out.println("连上了服务端");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
